@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from 'styled-components';
 
 interface ContainerProps {
@@ -25,14 +26,13 @@ interface CircleProps {
 
 // 일반 component에 props type 전달
 function Circle({ bgColor, borderColor, text = "default text" } : CircleProps) {
-  // ※ prop type에 디폴트값을 주는 방법: ↑↑↑ 1. 인자값에 디폴트값 지정(function Circle({ ... text = "default text" }))
+  // const [value, setValue] = useState(0);
+  const [value, setValue] = useState<number|string>(0);  // state 값의 타입이 하나로 고정되지 않고 바뀔 수 있을 경우, useState<number|string>와 같이 표기
+  setValue(true);
+  setValue('hello');
+  setValue(1);
+  
   return (
-    // ※ prop type에 디폴트값을 주는 방법: ↓↓↓ 2. props받을 때 디폴트값 지정 (borderColor={borderColor ?? bgColor)
-
-    // Circle 컴포넌트에서 선택적으로 부여하는 borderColor props는 선택사항이므로 주어지지 않을 수 있지만,
-    // 최종적으로 렌더링되는 Container styled component에서는 border스타일을 그리기 위해 borderColor props가 필수로 type되어 있다. (borderColor: string;)
-    // ∴ Circle 컴포넌트로부터 borderColor props가 주어지지 않았을 경우(=> borderColor: undefined), 
-    // Container 컴포넌트의 borderColor props 디폴트값으로 bgColor props값을 전달한다. (=> borderColor ?? bgColor)
     <Container bgColor={bgColor} borderColor={borderColor ?? bgColor}>
       {text}
     </Container>
