@@ -27,11 +27,11 @@ interface CircleProps {
 // 일반 component에 props type 전달
 function Circle({ bgColor, borderColor, text = "default text" } : CircleProps) {
   // const [value, setValue] = useState(0);
-  const [value, setValue] = useState<number|string>(0);  // state 값의 타입이 하나로 고정되지 않고 바뀔 수 있을 경우, useState<number|string>와 같이 표기
-  setValue(true);
-  setValue('hello');
-  setValue(1);
-  
+  // const [value, setValue] = useState<number|string>(0);  // state 값의 타입이 하나로 고정되지 않고 바뀔 수 있을 경우, useState<number|string>와 같이 표기
+  // setValue(true);
+  // setValue('hello');
+  // setValue(1);
+
   return (
     <Container bgColor={bgColor} borderColor={borderColor ?? bgColor}>
       {text}
