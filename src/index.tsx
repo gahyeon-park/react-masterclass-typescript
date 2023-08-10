@@ -1,19 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import { ThemeProvider } from 'styled-components';
-import { lightTheme } from './theme';
+import { RouterProvider } from 'react-router-dom';
+import router from './Router';
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
   );
   
-  // 6. theme.ts에서 만든 테마(darkTheme/lightTheme)를 ThemeProvider에 전달.
+  // 2. Router.tsx에서 createBrowserRouter함수로 정의한 router를 <RouteProvider />에 전달.
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={lightTheme}>
-      <App />
-    </ThemeProvider>
+      <RouterProvider router={router}/>
   </React.StrictMode>
 );
  
