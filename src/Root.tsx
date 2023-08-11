@@ -4,12 +4,13 @@ import Header from "./components/Header";
 
 function Root() {
   return (
-    // 3. <Outlet />: Router.tsx의 router에서 하위 경로요소(children)를 렌더링하기 위해 상위경로 요소(<Root />)에서 사용하는 컴포넌트.
-    // 상위경로("/")가 정확히 일치하면(localhost:3000/) 하위 색인경로를 렌더링한다. (=> children 요소중에 path: ""인 <Home />)
-    // but, path: ""인 하위경로가 없을 경우 아무것도 렌더링하지 않음.
+    // ※ <Outlet />에 context로 데이터 전달 시,
+    // 현재 이 Root 컴포넌트의 모든 자식 라우트의 컴포넌트(Home, About, User, Followers)가 useOutletContext()로 해당 데이터를 받을 수 있다.
+    // ★응용: 현재 이 Root 컴포넌트에 theme 관련 state가 있고, Header 내 버튼 클릭으로 이 state를 변경하게 되면, 
+    // Outlet에 context에도 변경사항이 반영되어 하위 경로의 모든 컴포넌트들도 변경된 theme 값을 공유할 수 있게 된다.
     <div>
       <Header />
-      <Outlet />
+      <Outlet context={{ darkMode: true }} />
     </div>
   )
 }
