@@ -1,39 +1,20 @@
-import { createBrowserRouter } from 'react-router-dom';
-import Root from './Root';
-import Home from './screens/Home';
-import About from './screens/About';
-import NotFound from './screens/NotFound';
-import ErrorComponent from './components/ErrorComponent';
-import User from './screens/users/User';
-import Followers from './screens/users/Followers';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Coins from './routes/Coins';
+import Coin from './routes/Coin';
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Root />,
-    children: [
-      {
-        path: "",
-        element: <Home />,
-        errorElement: <ErrorComponent />,
-      },
-      {
-        path: "about",
-        element: <About />,
-      },
-      {
-        path: "users/:userId",
-        element: <User />,
-        children: [
-          {
-            path: "followers",
-            element: <Followers />
-          }
-        ]
-      }
-    ],
-    errorElement: <NotFound /> // url에 해당하는 어떤 하위경로도 없을 경우 노출
-  }
-])
+function Router() {
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route path="/:coinId">
+          <Coin />
+        </Route>
+        <Route path="/">
+          <Coins />
+        </Route>
+      </Switch>
+    </BrowserRouter>
+  )
+}
 
-export default router;
+export default Router;

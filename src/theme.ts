@@ -1,15 +1,17 @@
-// 3. themes.ts 파일 생성
-
-// 4. styled.d.ts 파일에서 정의한 DefaultTheme 인터페이스 import
 import { DefaultTheme } from 'styled-components';
 
-// 5. 인터페이스에서 정의한 속성 그대로 lightTheme과 darkTheme을 만들고 내보낸다.
-export const lightTheme: DefaultTheme = {
-  bgColor: "white",
-  textColor: "black"
-};
+export const theme: DefaultTheme = {
+  bgColor: "#2f3640",
+  textColor: "#f5f6fa",
+  accentColor: "#00a8ff",
+}
 
-export const darkTheme: DefaultTheme = {
-  bgColor: "black",
-  textColor: "white"
-};
+// export const lightTheme: DefaultTheme = {
+//   bgColor: "white",
+//   textColor: "#999"
+// };
+
+// export const darkTheme: DefaultTheme = {
+//   bgColor: "black",
+//   textColor: "white"
+// };
