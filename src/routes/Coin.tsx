@@ -1,6 +1,8 @@
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, Switch, Route } from "react-router-dom";
 import styled from "styled-components";
 import { useState, useEffect } from 'react';
+import Price from './Price';
+import Chart from './Chart';
 
 const Container = styled.div`
   max-width: 480px;
@@ -9,7 +11,7 @@ const Container = styled.div`
 `;
 
 const Header = styled.header`
-  height: 10vh;
+  height: 15vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,6 +24,28 @@ const Title = styled.h1`
 
 const Loader = styled.p`
   text-align: center;
+`;
+
+const Overview = styled.div`
+  display: flex;
+  justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  border-radius: 10px;
+`;
+const OverviewItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  span:first-child {
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+`;
+const Description = styled.p`
+  margin: 20px 0px;
 `;
 
 interface RouteParams {
@@ -111,8 +135,9 @@ const [loading, setLoading] = useState(true);
       
       setInfo(infoData);
       setPriceInfo(priceData);
+      setLoading(false);
     })();
-  }, []); // ← 감시할 데이터가 없을 경우에는 빈 배열이라도 넣어야 함. 넣지 않을경우 useEffect 내 함수 무한대로 호출
+  }, [coinId]); // ← 감시할 데이터가 없을 경우에는 빈 배열이라도 넣어야 함. 넣지 않을경우 useEffect 내 함수 무한대로 호출
   
   
   return (
@@ -121,7 +146,41 @@ const [loading, setLoading] = useState(true);
       {
         loading ?
         <Loader>Loading...</Loader> : 
-        null
+        <>
+          <Overview>
+            <OverviewItem>
+              <span>Rank:</span>
+              <span>{info?.rank}</span>
+            </OverviewItem>
+            <OverviewItem>
+              <span>Symbol:</span>
+              <span>${info?.symbol}</span>
+            </OverviewItem>
+            <OverviewItem>
+              <span>Open Source:</span>
+              <span>{info?.open_source ? "Yes" : "No"}</span>
+            </OverviewItem>
+          </Overview>
+          <Description>{info?.description}</Description>
+          <Overview>
+            <OverviewItem>
+              <span>Total Suply:</span>
+              <span>{priceInfo?.total_supply}</span>
+            </OverviewItem>
+                <OverviewItem>
+              <span>Max Suply:</span>
+              <span>{priceInfo?.max_supply}</span>
+            </OverviewItem>
+          </Overview>
+          <Switch>
+            <Route path="/:coinId/price">
+              <Price />
+            </Route>
+            <Route path="/:coinId/chart">
+              <Chart />
+            </Route>
+          </Switch>
+        </>
       }
     </Container>
   )
