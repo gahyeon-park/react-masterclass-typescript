@@ -1,4 +1,4 @@
-import { useParams, useLocation, Switch, Route } from "react-router-dom";
+import { useParams, useLocation, Switch, Route, Link, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import { useState, useEffect } from 'react';
 import Price from './Price';
@@ -46,6 +46,28 @@ const OverviewItem = styled.div`
 `;
 const Description = styled.p`
   margin: 20px 0px;
+`;
+const Tabs = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 25px 0px;
+  gap: 10px;
+`;
+
+// ※ props명을 isActive로 한 경우, React DOM요소가 isActive prop를 인식하지 못하는 에러 발생 → $isActive로 변경하면 에러 X
+const Tab = styled.span<{ $isActive: boolean }>`
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 400;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 7px 0px;
+  border-radius: 10px;
+  color: ${props => props.$isActive ? props.theme.accentColor : props.theme.textColor};
+    
+  a {
+    display: block;
+  }
 `;
 
 interface RouteParams {
@@ -120,25 +142,25 @@ interface IPriceData {
 }
 
 function Coin() {
-const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const { coinId } = useParams<RouteParams>();
   const { state } = useLocation<RouteState>();
   const [info, setInfo] = useState<IinfoData>();
   const [priceInfo, setPriceInfo] = useState<IPriceData>();
-
+  let priceMatch = useRouteMatch("/:coinId/price");
+  let chartMatch = useRouteMatch("/:coinId/chart");
+  // └> useRouteMath에 인자로 넘긴 경로와 화면의 URL이 같다면 route관련 object를 리턴, 같지 않을 경우는 null 리턴
+  
   useEffect(() => {
     (async () => {
       const infoData = await (await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)).json();
       const priceData = await (await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)).json();
-      console.log(infoData);
-      console.log(priceData);
       
       setInfo(infoData);
       setPriceInfo(priceData);
       setLoading(false);
     })();
-  }, [coinId]); // ← 감시할 데이터가 없을 경우에는 빈 배열이라도 넣어야 함. 넣지 않을경우 useEffect 내 함수 무한대로 호출
-  
+  }, [coinId]);
   
   return (
     <Container>
@@ -172,6 +194,17 @@ const [loading, setLoading] = useState(true);
               <span>{priceInfo?.max_supply}</span>
             </OverviewItem>
           </Overview>
+
+          <Tabs>
+            <Tab $isActive={priceMatch !== null}><Link to={`/${coinId}/price`}>Price</Link></Tab>
+            <Tab $isActive={chartMatch !== null}><Link to={`/${coinId}/chart`}>Chart</Link></Tab>
+          </Tabs>
+
+          {/* <Link to={`${match.url}/price`}>Price</Link>
+          <Link to={`${match.url}/chart`}>Chart</Link> */}
+          {/* <Link to={`/${coinId}/price`}>Price</Link>
+          <Link to={`/${coinId}/chart`}>Chart</Link> */}
+
           <Switch>
             <Route path="/:coinId/price">
               <Price />
