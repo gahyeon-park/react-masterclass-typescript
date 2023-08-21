@@ -1,10 +1,7 @@
 import Router from './Router';
 import { createGlobalStyle } from 'styled-components';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
-// 기존의 import styled from 'styled-components';의 styled로 만든 컴포넌트는
-// 스타일이 단일 태그에 국한된다. (=> const Container = styled.div<ContainerProps>`width: 200px; ..`),
-// but, createGlobalStyle로 만든 컴포넌트는 렌더링될 때 전역 스코프에(<head>태그 내) 스타일들을 올려주기 때문에 
-// reset.css나 웹폰트처럼 전체 문서에 적용되는 스타일을 정의할 때 사용한다.
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400&display=swap');
 html, body, div, span, applet, object, iframe,
@@ -72,6 +69,7 @@ function App() {
     <>
       <GlobalStyle />
       <Router />
+      <ReactQueryDevtools initialIsOpen={true} />
     </>
   )
 }

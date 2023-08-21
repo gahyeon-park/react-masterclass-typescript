@@ -1,7 +1,9 @@
 
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { fetchCoins } from '../api';
 
 const Container = styled.div`
   max-width: 480px;
@@ -66,26 +68,30 @@ interface CoinInterface {
 };
 
 function Coins() {
-  const [loading, setLoading] = useState(true);
-  const [coins, setCoins] = useState<CoinInterface[]>([]); // typeScript에게 state값은 CoinInterface로 typed된 Coin 배열을 받는다는 것을 알려준다.
+  // ※ reactQuery는 API 데이터를 캐싱하기 때문에 
+  // 코인상세(Coin)에서 코인홈(Coins) 화면으로 돌아올 때 로딩없이 캐시된 데이터로 코인목록을 바로 그릴 수 있다.
+  // (아래에 기존 useEffect 내에서 API 불러올 때는 코인상세에서 홈으로 올 때마다 로딩이 나왔음)
+  const { isLoading, data } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
+  // const [loading, setLoading] = useState(true);
+  // const [coins, setCoins] = useState<CoinInterface[]>([]);
   
-  useEffect(() => {
-    (async() => {
-      const response = await fetch('https://api.coinpaprika.com/v1/coins');
-      const json = await response.json();
-      setCoins(json.slice(0, 100));
-      setLoading(false);
-    })();
-  }, []);
-  console.log(coins);
+  // useEffect(() => {
+  //   (async() => {
+  //     const response = await fetch('https://api.coinpaprika.com/v1/coins');
+  //     const json = await response.json();
+  //     setCoins(json.slice(0, 100));
+  //     setLoading(false);
+  //   })();
+  // }, []);
+  console.log(isLoading, data);
 
   return (
     <Container>
       <Header><Title>코인</Title></Header>
-      {loading ? 
+      {isLoading ? 
         <Loader>Loading...</Loader> : 
         <CoinsList>
-          {coins.map(coin => 
+          {data?.slice(0, 100).map(coin => 
             <CoinItem key={coin.id}>
               <Link to={{
                 pathname: `/${coin.id}`,
