@@ -144,11 +144,8 @@ interface IPriceData {
 }
 
 function Coin() {
-  // const [loading, setLoading] = useState(true);
   const { coinId } = useParams<RouteParams>();
   const { state } = useLocation<RouteState>();
-  // const [info, setInfo] = useState<IinfoData>();
-  // const [priceInfo, setPriceInfo] = useState<IPriceData>();
   let priceMatch = useRouteMatch("/:coinId/price");
   let chartMatch = useRouteMatch("/:coinId/chart");
   // └> useRouteMath에 인자로 넘긴 경로와 화면의 URL이 같다면 route관련 object를 리턴, 같지 않을 경우는 null 리턴
@@ -214,7 +211,7 @@ function Coin() {
               <Price />
             </Route>
             <Route path="/:coinId/chart">
-              <Chart />
+              <Chart coinId={coinId} />
             </Route>
           </Switch>
         </>
