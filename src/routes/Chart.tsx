@@ -8,8 +8,8 @@ interface IChartProps {
 }
 
 interface IOhlcv {
-  time_open: string;
-  time_close: string;
+  time_open: number;
+  time_close: number;
   open: number;
   high: number;
   low: number;
@@ -23,14 +23,6 @@ function Chart({ coinId }: IChartProps) {
   const { isLoading, data } = useQuery<IOhlcv[]>(["ohlcv", coinId], () =>
     fetchCoinHistory(coinId)
   );
-
-  const getDate = (milliSecond: string) => {
-    const dateIns = new Date(parseInt(milliSecond, 10));
-    const month = dateIns.getMonth() + 1; // 달의 경우 반환값 0부터 시작(1월: 0 ~ 12월: 11)
-    const date = dateIns.getDate();
-
-    return `${month}/${date}`;
-  };
 
   return (
     <div>
@@ -58,7 +50,12 @@ function Chart({ coinId }: IChartProps) {
               show: false,
             },
             xaxis: {
-              categories: data?.map((price) => getDate(price.time_close)),
+              labels: {
+                show: false,
+              },
+              categories: data?.map(
+                (price) => new Date(price.time_close * 1000)
+              ),
             },
             yaxis: {
               show: false,
@@ -68,6 +65,20 @@ function Chart({ coinId }: IChartProps) {
             },
             theme: {
               mode: "dark",
+            },
+            colors: ["dodgerblue"],
+            fill: {
+              type: "gradient",
+              gradient: {
+                shadeIntensity: 1,
+                gradientToColors: ["lightcoral"],
+                stops: [0, 100],
+              },
+            },
+            tooltip: {
+              y: {
+                formatter: (value) => `$${value.toFixed(2)}`,
+              },
             },
           }}
         />
