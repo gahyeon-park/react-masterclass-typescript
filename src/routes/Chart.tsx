@@ -20,8 +20,10 @@ interface IOhlcv {
 
 function Chart({ coinId }: IChartProps) {
   // ohlcv =>  Open/High/Low/Close values (시가/고가/저가/종가 값)
-  const { isLoading, data } = useQuery<IOhlcv[]>(["ohlcv", coinId], () =>
-    fetchCoinHistory(coinId)
+  const { isLoading, data } = useQuery<IOhlcv[]>(
+    ["ohlcv", coinId],
+    () => fetchCoinHistory(coinId),
+    { refetchInterval: 10000 }
   );
 
   return (

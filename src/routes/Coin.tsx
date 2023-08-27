@@ -1,10 +1,18 @@
-import { useParams, useLocation, Switch, Route, Link, useRouteMatch } from "react-router-dom";
+import {
+  useParams,
+  useLocation,
+  Switch,
+  Route,
+  Link,
+  useRouteMatch,
+} from "react-router-dom";
 import styled from "styled-components";
 // import { useState, useEffect } from 'react';
-import Price from './Price';
-import Chart from './Chart';
-import { useQuery } from 'react-query';
-import { fetchCoinInfo, fetchCoinTickers } from '../api';
+import Price from "./Price";
+import Chart from "./Chart";
+import { useQuery } from "react-query";
+import { fetchCoinInfo, fetchCoinTickers } from "../api";
+import { Helmet } from "react-helmet-async";
 
 const Container = styled.div`
   max-width: 480px;
@@ -21,7 +29,7 @@ const Header = styled.header`
 
 const Title = styled.h1`
   font-size: 48px;
-  color: ${props => props.theme.accentColor};
+  color: ${(props) => props.theme.accentColor};
 `;
 
 const Loader = styled.p`
@@ -65,8 +73,9 @@ const Tab = styled.span<{ $isActive: boolean }>`
   background-color: rgba(0, 0, 0, 0.5);
   padding: 7px 0px;
   border-radius: 10px;
-  color: ${props => props.$isActive ? props.theme.accentColor : props.theme.textColor};
-    
+  color: ${(props) =>
+    props.$isActive ? props.theme.accentColor : props.theme.textColor};
+
   a {
     display: block;
   }
@@ -74,10 +83,10 @@ const Tab = styled.span<{ $isActive: boolean }>`
 
 interface RouteParams {
   coinId: string;
-};
+}
 interface RouteState {
   name: string;
-};
+}
 
 interface ITag {
   id: string;
@@ -139,7 +148,7 @@ interface IPriceData {
       price: number;
       volume_24h: number;
       volume_24h_change_24h: number;
-    }
+    };
   };
 }
 
@@ -149,14 +158,21 @@ function Coin() {
   let priceMatch = useRouteMatch("/:coinId/price");
   let chartMatch = useRouteMatch("/:coinId/chart");
   // └> useRouteMath에 인자로 넘긴 경로와 화면의 URL이 같다면 route관련 object를 리턴, 같지 않을 경우는 null 리턴
-  
-  const { isLoading: infoLoading, data: infoData } = useQuery<IinfoData>(["info", coinId], () => fetchCoinInfo(coinId));
-  const { isLoading: tickersLoading, data: tickersData } = useQuery<IPriceData>(["tickers", coinId], () => fetchCoinTickers(coinId));
+
+  const { isLoading: infoLoading, data: infoData } = useQuery<IinfoData>(
+    ["info", coinId],
+    () => fetchCoinInfo(coinId)
+  );
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<IPriceData>(
+    ["tickers", coinId],
+    () => fetchCoinTickers(coinId),
+    { refetchInterval: 10000 }
+  );
   // useEffect(() => {
   //   (async () => {
   //     const infoData = await (await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)).json();
   //     const priceData = await (await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)).json();
-      
+
   //     setInfo(infoData);
   //     setPriceInfo(priceData);
   //     setLoading(false);
@@ -165,10 +181,19 @@ function Coin() {
   const loading = infoLoading || tickersLoading;
   return (
     <Container>
-      <Header><Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title></Header>
-      {
-        loading ?
-        <Loader>Loading...</Loader> : 
+      <Helmet>
+        <title>
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+        </title>
+      </Helmet>
+      <Header>
+        <Title>
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+        </Title>
+      </Header>
+      {loading ? (
+        <Loader>Loading...</Loader>
+      ) : (
         <>
           <Overview>
             <OverviewItem>
@@ -180,8 +205,8 @@ function Coin() {
               <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>Price:</span>
+              <span>{tickersData?.quotes.USD.price.toFixed(3)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
@@ -190,15 +215,19 @@ function Coin() {
               <span>Total Suply:</span>
               <span>{tickersData?.total_supply}</span>
             </OverviewItem>
-                <OverviewItem>
+            <OverviewItem>
               <span>Max Suply:</span>
               <span>{tickersData?.max_supply}</span>
             </OverviewItem>
           </Overview>
 
           <Tabs>
-            <Tab $isActive={priceMatch !== null}><Link to={`/${coinId}/price`}>Price</Link></Tab>
-            <Tab $isActive={chartMatch !== null}><Link to={`/${coinId}/chart`}>Chart</Link></Tab>
+            <Tab $isActive={priceMatch !== null}>
+              <Link to={`/${coinId}/price`}>Price</Link>
+            </Tab>
+            <Tab $isActive={chartMatch !== null}>
+              <Link to={`/${coinId}/chart`}>Chart</Link>
+            </Tab>
           </Tabs>
 
           {/* <Link to={`${match.url}/price`}>Price</Link>
@@ -215,9 +244,9 @@ function Coin() {
             </Route>
           </Switch>
         </>
-      }
+      )}
     </Container>
-  )
+  );
 }
 
 export default Coin;
