@@ -2,9 +2,9 @@
 import { useQuery } from "react-query";
 import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
-
 interface IChartProps {
   coinId: string;
+  isDark: boolean;
 }
 
 interface IOhlcv {
@@ -18,8 +18,7 @@ interface IOhlcv {
   market_cap: number;
 }
 
-function Chart({ coinId }: IChartProps) {
-  // ohlcv =>  Open/High/Low/Close values (시가/고가/저가/종가 값)
+function Chart({ coinId, isDark }: IChartProps) {
   const { isLoading, data } = useQuery<IOhlcv[]>(
     ["ohlcv", coinId],
     () => fetchCoinHistory(coinId),
@@ -66,7 +65,7 @@ function Chart({ coinId }: IChartProps) {
               curve: "smooth",
             },
             theme: {
-              mode: "dark",
+              mode: isDark ? "dark" : "light",
             },
             colors: ["dodgerblue"],
             fill: {
