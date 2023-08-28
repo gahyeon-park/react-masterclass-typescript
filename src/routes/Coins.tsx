@@ -65,11 +65,7 @@ interface CoinInterface {
   type: string;
 }
 
-interface IRouterProps {
-  toggleDark: () => void;
-}
-
-function Coins({ toggleDark } : IRouterProps) {
+function Coins() {
   // ※ reactQuery는 API 데이터를 캐싱하기 때문에
   // 코인상세(Coin)에서 코인홈(Coins) 화면으로 돌아올 때 로딩없이 캐시된 데이터로 코인목록을 바로 그릴 수 있다.
   // (아래에 기존 useEffect 내에서 API 불러올 때는 코인상세에서 홈으로 올 때마다 로딩이 나왔음)
@@ -92,7 +88,6 @@ function Coins({ toggleDark } : IRouterProps) {
       </Helmet>
       <Header>
         <Title>코인</Title>
-        <button onClick={toggleDark}>Toggle Mode</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
