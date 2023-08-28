@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import { fetchCoins } from "../api";
 import { Helmet } from "react-helmet-async";
+import { useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atom";
 
 const Container = styled.div`
   max-width: 480px;
@@ -66,21 +68,10 @@ interface CoinInterface {
 }
 
 function Coins() {
-  // ※ reactQuery는 API 데이터를 캐싱하기 때문에
-  // 코인상세(Coin)에서 코인홈(Coins) 화면으로 돌아올 때 로딩없이 캐시된 데이터로 코인목록을 바로 그릴 수 있다.
-  // (아래에 기존 useEffect 내에서 API 불러올 때는 코인상세에서 홈으로 올 때마다 로딩이 나왔음)
+  const setDarkAtom = useSetRecoilState(isDarkAtom); // isDarkAtom 값을 설정하는 함수 반환
+  const toggleDarkAtom = () => setDarkAtom(prev => !prev);
   const { isLoading, data } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
-  // const [loading, setLoading] = useState(true);
-  // const [coins, setCoins] = useState<CoinInterface[]>([]);
 
-  // useEffect(() => {
-  //   (async() => {
-  //     const response = await fetch('https://api.coinpaprika.com/v1/coins');
-  //     const json = await response.json();
-  //     setCoins(json.slice(0, 100));
-  //     setLoading(false);
-  //   })();
-  // }, []);
   return (
     <Container>
       <Helmet>
@@ -88,6 +79,7 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>코인</Title>
+        <button onClick={toggleDarkAtom}>toggle Mode</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
