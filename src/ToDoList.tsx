@@ -31,13 +31,20 @@ interface IForm {
   userName: string;
   password1: string;
   password2: string;
+  extraError?: string;
 }
 
 function TodoList() {
-  const { register, handleSubmit, formState: { errors } } = useForm<IForm>();
-  const onValid = (data: any) => {
+  const { register, handleSubmit, formState: { errors }, setError } = useForm<IForm>({ defaultValues: { email: "@naver.com" }});
+  const onValid = (data: IForm) => {
     // 데이터가 유효할 경우 실행됨.
-    console.log('isValid: ', data);
+    console.log("isValid", data);
+    
+    if(data.password1 !== data.password2) {
+      setError("password2", { message: "your password are not the same" }, { shouldFocus: true });
+    }
+
+    // setError("extraError", { message: "Server offline." }) // 특정 항목에 해당되는 에러가 아닌, 전체 form에 해당되는 에러
   }
   
   const onInvalid = (data: any) => {
@@ -50,7 +57,13 @@ function TodoList() {
       <form style={{display: "flex", flexDirection: "column"}} onSubmit={handleSubmit(onValid, onInvalid)}>
         <input {...register("email", { required: "Email is required", pattern: { value: /^[A-Za-z0-9._%+-]+@naver.com$/, message: "Only naver.com emails allowed" } })}  placeholder="Email" />
         <span>{errors?.email?.message}</span>
-        <input {...register("firstName", { required: "FirstName is required" })}  placeholder="First Name" />
+        <input {...register("firstName", { required: "FirstName is required", validate: {
+          checkNico: value => value.includes("nico") ? "no nico allowed" : true,
+          checkIsNumber: value => { 
+            const newVal = value.split("");
+            return newVal.every(str => isNaN(Number(str))) ? true : "Write text only"
+          }
+        } })}  placeholder="First Name" />
         <span>{errors?.firstName?.message }</span>
         <input {...register("lastName", { required: "LastName is required" })}  placeholder="last Name" />
         <span>{errors?.lastName?.message }</span>
@@ -66,6 +79,7 @@ function TodoList() {
         <input {...register("password2", { required: "Please write your password once more.", minLength: 5 })}  placeholder="Password" />
         <span>{errors?.password2?.message }</span>
         <button>Add</button>
+        <span>{errors?.extraError?.message}</span>
       </form>
     </div>
   )
