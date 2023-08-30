@@ -1,5 +1,6 @@
 import { createGlobalStyle } from "styled-components";
-import TodoList from './ToDoList';
+import { RecoilRoot } from 'recoil';
+import TodoList from './components/ToDoList';
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400&display=swap');
@@ -66,8 +67,10 @@ a {
 function App() {
   return (
     <>
-      <GlobalStyle />
-      <TodoList />
+      <RecoilRoot>
+        <GlobalStyle />
+        <TodoList />
+      </RecoilRoot>
     </>
   );
 }
