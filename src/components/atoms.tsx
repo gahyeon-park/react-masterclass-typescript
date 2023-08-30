@@ -1,5 +1,7 @@
 
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil'; 
+// selector: atom을 가져와서 그 atom의 "output"을 변형시켜주는 도구 (★state 자체는 바꾸지 않음★)
+
 
 // todoList 배열에 들어가는 각 todoItem의 type
 export interface ITodo {
@@ -13,4 +15,20 @@ export interface ITodo {
 export const todoListState = atom<ITodo[]>({
   key: "todos",
   default: []
+})
+
+export const todoSelector = selector({
+  key: "todoSelector",
+  get: ({ get }) => {
+    // ※ 이제 이 selector는 todoListState Atom을 구독하기 때문에 Atom이 변하면, selector도 따라서 바뀐 값을 반환한다.
+    const todos = get(todoListState);
+
+    const filtered = [
+      todos.filter(todo => todo.category === 'TODO'), 
+      todos.filter(todo => todo.category === 'DOING'), 
+      todos.filter(todo => todo.category === 'DONE')
+    ];
+
+    return filtered;
+  }
 })
