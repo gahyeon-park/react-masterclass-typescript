@@ -10,6 +10,11 @@ export interface ITodo {
   category: "TODO"|"DOING"|"DONE";
 }
 
+export const categoryState = atom({
+  key: "category",
+  default: "TODO"
+})
+
 // todoList state는 atom으로 저장하고, 
 // 이 todoListState값은 ITodo 인터페이스를 따르는 객체로 이루어진 배열임(<ITodo[]>)을 Atom에 TS 전달
 export const todoListState = atom<ITodo[]>({
@@ -22,13 +27,8 @@ export const todoSelector = selector({
   get: ({ get }) => {
     // ※ 이제 이 selector는 todoListState Atom을 구독하기 때문에 Atom이 변하면, selector도 따라서 바뀐 값을 반환한다.
     const todos = get(todoListState);
+    const category = get(categoryState);  
 
-    const filtered = [
-      todos.filter(todo => todo.category === 'TODO'), 
-      todos.filter(todo => todo.category === 'DOING'), 
-      todos.filter(todo => todo.category === 'DONE')
-    ];
-
-    return filtered;
+    return todos.filter(todo => todo.category === category);
   }
 })
