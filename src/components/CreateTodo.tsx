@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { useSetRecoilState } from 'recoil';
-import { todoListState } from './atoms';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { todoListState, categoryState } from './atoms';
 
 
 // input에 입력하는 todo값의 type
@@ -11,6 +11,7 @@ interface IForm {
 function CreateTodo() {
   const { register, handleSubmit, setValue } = useForm<IForm>();
   const setTodos = useSetRecoilState(todoListState);
+  const category = useRecoilValue(categoryState);
 
   const isValidHandler = (data: IForm) => {
     addTodo(data.todo);
@@ -22,7 +23,7 @@ function CreateTodo() {
       {
         id: Date.now(),
         text: todo,
-        category: "TODO"
+        category: category
       },
       ...oldTodos,
     ]);

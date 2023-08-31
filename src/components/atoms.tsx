@@ -2,17 +2,25 @@
 import { atom, selector } from 'recoil'; 
 // selector: atom을 가져와서 그 atom의 "output"을 변형시켜주는 도구 (★state 자체는 바꾸지 않음★)
 
+// enumerable(: 열거할 수 있는) 
+// └> enum으로 정의하는 이유는 type의 "TODO" | "DOING" | "DONE"과 같이 세 값중 하나를 쓴다고 알려줄 수 있기 때문. 
+export enum Categories {
+  "TODO" = "TODO", // (enum member) Categories["TODO"] = 0
+  "DOING" = "DOING", // (enum member) Categories["DOING"] = 1
+  "DONE" = "DONE" // (enum member) Categories["DONE"] = 2
+}
+// enumerable의 값은 숫자로 표현된다.
 
 // todoList 배열에 들어가는 각 todoItem의 type
 export interface ITodo {
   id: number;
   text: string;
-  category: "TODO"|"DOING"|"DONE";
+  category: Categories;
 }
 
-export const categoryState = atom({
+export const categoryState = atom<Categories>({  // atom<ITodo["category"]> 도 가능
   key: "category",
-  default: "TODO"
+  default: Categories.TODO  // 0/1/2 중에 하나로 써도 됨.
 })
 
 // todoList state는 atom으로 저장하고, 

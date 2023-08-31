@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ITodo, todoListState } from './atoms';
+import { ITodo, todoListState, Categories } from './atoms';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 const Li = styled.li`
@@ -24,7 +24,7 @@ function Todo({ text, category, id }: ITodo) {
     
     setTodos(oldTodos => {
       const targetIdx = oldTodos.findIndex(todo => todo.id === id);
-      const newTodo = { text, id, category: name as ITodo["category"] };
+      const newTodo = { text, id, category: name as any };
 
       // ※ 기존 todoList 배열 순서를 그대로 유지한 채, 현재 todo의 category만 업데이트한 새 배열이 반환되어야 함.
       const frontArr = oldTodos.slice(0, targetIdx);
@@ -49,9 +49,9 @@ function Todo({ text, category, id }: ITodo) {
   return (
     <Li>
       <span>{text}</span>
-      {category !== "TODO" && <button name="TODO" onClick={onClick}>To do</button>}
-      {category !== "DOING" && <button name="DOING" onClick={onClick}>Doing</button>}
-      {category !== "DONE" && <button name="DONE" onClick={onClick}>Done</button>}
+      {category !== Categories.TODO && <button name={Categories.TODO} onClick={onClick}>To do</button>}
+      {category !== Categories.DOING && <button name={Categories.DOING} onClick={onClick}>Doing</button>}
+      {category !== Categories.DONE && <button name={Categories.DONE} onClick={onClick}>Done</button>}
     </Li>
   );
 
