@@ -18,7 +18,7 @@ function Todo({ text, category, id }: ITodo) {
   const todos = useRecoilValue(todoListState);
   const setTodos = useSetRecoilState(todoListState);
   
-  console.log(todos);
+  console.log("todos", todos);
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const { currentTarget: { name }} = event;
     
@@ -46,12 +46,19 @@ function Todo({ text, category, id }: ITodo) {
     });
   }
 
+  const deleteTodo = () => {
+    setTodos(oldTodos => {
+      return oldTodos.filter(todo => todo.id !== id);
+    });
+  }
+
   return (
     <Li>
       <span>{text}</span>
       {category !== Categories.TODO && <button name={Categories.TODO} onClick={onClick}>To do</button>}
       {category !== Categories.DOING && <button name={Categories.DOING} onClick={onClick}>Doing</button>}
       {category !== Categories.DONE && <button name={Categories.DONE} onClick={onClick}>Done</button>}
+      <button onClick={deleteTodo}>delete</button>
     </Li>
   );
 

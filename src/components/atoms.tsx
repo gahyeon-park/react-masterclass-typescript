@@ -23,11 +23,28 @@ export const categoryState = atom<Categories>({  // atom<ITodo["category"]> 도 
   default: Categories.TODO  // 0/1/2 중에 하나로 써도 됨.
 })
 
-// todoList state는 atom으로 저장하고, 
-// 이 todoListState값은 ITodo 인터페이스를 따르는 객체로 이루어진 배열임(<ITodo[]>)을 Atom에 TS 전달
+const localStorageEffect = (key: string) => ({setSelf, onSet}: any) => {
+  const savedTodos = localStorage.getItem(key);
+  if (savedTodos != null) {
+    // setSelf -> Callbacks to set or reset the value of the atom.
+    setSelf(JSON.parse(savedTodos));
+  }
+  console.log("localStorageEffect", savedTodos);
+
+  // onSet -> Subscribe to changes in the atom value.
+  onSet((newTodos: Array<ITodo>, _: any, isReset: boolean) => {
+    isReset
+      ? localStorage.removeItem(key)
+      : localStorage.setItem(key, JSON.stringify(newTodos));
+  });
+};
+
 export const todoListState = atom<ITodo[]>({
   key: "todos",
-  default: []
+  default: JSON.parse(window.localStorage.getItem("myTodo") || `[]`),
+  effects: [
+    localStorageEffect('myTodo')
+  ]
 })
 
 export const todoSelector = selector({

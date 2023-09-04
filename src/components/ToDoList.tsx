@@ -18,8 +18,6 @@ function TodoList() {
     setCategory(event.currentTarget.value as Categories);
   }
 
-  console.log("filteredList", filteredList);
-  
   return (
     <div>
       <h1>To dos</h1>
