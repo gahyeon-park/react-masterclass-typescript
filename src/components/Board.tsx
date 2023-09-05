@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import DraggableCard from './DraggableCard';
 
 const Wrapper = styled.div`
-  min-height: 200px;
+  min-height: 300px;
   padding: 20px 10px;
-  padding-top: 30px;
   border-radius: 5px;
   background-color: ${props => props.theme.boardColor};
+  display: flex;
+  flex-direction: column;
 `;
 
 const Title = styled.h2`
@@ -15,6 +16,18 @@ const Title = styled.h2`
   font-weight: 600;
   margin-bottom: 10px;
   font-size: 18px;
+`;
+
+interface IAreaProps {
+  $isDraggingOver: boolean;
+  $isDraggingFromThis: boolean;
+}
+
+// Area가 div 태그여서 isDraggingOver props를 인지못하기 때문에 ↓아래와 같이 type 선언
+const Area = styled.div<IAreaProps>`
+  background-color: ${props => props.$isDraggingOver ? "pink" : props.$isDraggingFromThis ? "slategray" : "lightseagreen"};
+  flex-grow: 1;
+  transition: background-color .3s ease-in-out;
 `;
 
 interface IProps {
@@ -27,13 +40,13 @@ function Board({ todos, boardId } : IProps){
     <Wrapper>
       <Title>{boardId}</Title>
       <Droppable droppableId={boardId}>
-        {(provided) => (
-          <div style={{backgroundColor: "red"}} ref={provided.innerRef} {...provided.droppableProps}>
+        {(provided, snapshot) => (
+          <Area $isDraggingOver={snapshot.isDraggingOver} $isDraggingFromThis={Boolean(snapshot.draggingFromThisWith)} ref={provided.innerRef} {...provided.droppableProps}>
             {todos.map((todo, idx) => (
               <DraggableCard key={todo} todo={todo} idx={idx} />
             ))}
             {provided.placeholder}
-          </div>
+          </Area>
         )}
       </Droppable>
       </Wrapper>

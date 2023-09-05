@@ -25,7 +25,7 @@ function DraggableCard({ todo, idx }: IProps) {
   // 여기서는 f와 e의 index props만 바뀌었는데 a,b,c,d도 렌더링되는 상황.
   // ★ React.memo()를 사용해서 실제 props가 바뀐 항목만 렌더링되도록 한다.
   return (
-    <Draggable key={todo} draggableId={todo} index={idx}>
+    <Draggable draggableId={todo} index={idx}>
       {(provided) => (
         <Card 
           ref={provided.innerRef}
