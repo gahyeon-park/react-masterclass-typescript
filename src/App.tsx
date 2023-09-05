@@ -1,4 +1,6 @@
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
+import { useRecoilState } from 'recoil';
+import { todoListState } from './atoms';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -32,10 +34,24 @@ const Card = styled.div`
   background-color: ${props => props.theme.cardColor};
 `;
 
-const toDos = ["a", "b", "c", "d", "e", "f"];
-
 function App() {
-  const onDragEnd = () => {}
+  const [todos, setTodos] = useRecoilState(todoListState);
+  const onDragEnd = ({ draggableId, destination, source } : DropResult) => {
+    // console.log("dragging finished", args.source.index, args.destination.index);
+
+    if(!destination) return;
+    setTodos(oldTodos => {
+      const todosCopied = [...oldTodos]; // splice는 원본배열을 수정하므로 todos배열 복사본으로 작업한다.
+      // 1. Delete item on source.index
+      todosCopied.splice(source.index, 1);
+      // 2. Put back the item on the destination.index
+      todosCopied.splice(destination?.index, 0, draggableId);
+
+      return todosCopied;
+    });
+  }
+  console.log(todos);
+  
 
   return <DragDropContext onDragEnd={onDragEnd}>
     <Wrapper>
@@ -43,8 +59,9 @@ function App() {
         <Droppable droppableId="one">
           {(provided) => 
             <Board ref={provided.innerRef} {...provided.droppableProps}>
-              {toDos.map((todo, idx) => (
-                <Draggable draggableId={todo} index={idx}>
+              {todos.map((todo, idx) => (
+                // ※ react-beautiful-dnd에서 key와 draggableId는 같아야 함.
+                <Draggable key={todo} draggableId={todo} index={idx}>
                   {(provided) => (
                     <Card 
                       ref={provided.innerRef}
