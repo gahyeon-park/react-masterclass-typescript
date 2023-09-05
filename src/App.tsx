@@ -24,17 +24,24 @@ const Boards = styled.div`
 
 function App() {
   const [todos, setTodos] = useRecoilState(todoListState);
-  const onDragEnd = ({ draggableId, destination, source } : DropResult) => {
-    // console.log("dragging finished", args.source.index, args.destination.index);
+  const onDragEnd = (info : DropResult) => {
+    console.log("dragging finished", info);
 
-    // if(!destination) return;
-    // setTodos(oldTodos => {
-    //   const todosCopied = [...oldTodos];
-    //   todosCopied.splice(source.index, 1);
-    //   todosCopied.splice(destination?.index, 0, draggableId);
+    const { destination, draggableId, source } = info;
 
-    //   return todosCopied;
-    // });
+    if(destination?.droppableId === source.droppableId) {
+      // same board movement
+      setTodos(allBoards => {
+        const boardCopied = [...allBoards[source.droppableId]];
+        boardCopied.splice(source.index, 1);
+        boardCopied.splice(destination?.index, 0, draggableId);
+        
+        return {
+          ...allBoards, // 기존 todo, doing, done 리스트를 그대로 가져오고
+          [source.droppableId]: boardCopied // 드래그앤드롭한 보드 리스트만 업데이트
+        };
+      });
+    }
   }
   console.log(todos);
 

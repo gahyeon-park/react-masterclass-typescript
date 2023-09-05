@@ -10,6 +10,13 @@ const Wrapper = styled.div`
   background-color: ${props => props.theme.boardColor};
 `;
 
+const Title = styled.h2`
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 18px;
+`;
+
 interface IProps {
   todos: Array<string>;
   boardId: string;
@@ -17,16 +24,19 @@ interface IProps {
 
 function Board({ todos, boardId } : IProps){
   return (
-    <Droppable droppableId={boardId}>
-    {(provided) => 
-      <Wrapper ref={provided.innerRef} {...provided.droppableProps}>
-        {todos.map((todo, idx) => (
-          <DraggableCard key={todo} todo={todo} idx={idx} />
-        ))}
-        {provided.placeholder}
+    <Wrapper>
+      <Title>{boardId}</Title>
+      <Droppable droppableId={boardId}>
+        {(provided) => (
+          <div ref={provided.innerRef} {...provided.droppableProps}>
+            {todos.map((todo, idx) => (
+              <DraggableCard key={todo} todo={todo} idx={idx} />
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
       </Wrapper>
-    }
-  </Droppable>
   )
 }
 
