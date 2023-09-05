@@ -28,7 +28,7 @@ function Board({ todos, boardId } : IProps){
       <Title>{boardId}</Title>
       <Droppable droppableId={boardId}>
         {(provided) => (
-          <div ref={provided.innerRef} {...provided.droppableProps}>
+          <div style={{backgroundColor: "red"}} ref={provided.innerRef} {...provided.droppableProps}>
             {todos.map((todo, idx) => (
               <DraggableCard key={todo} todo={todo} idx={idx} />
             ))}

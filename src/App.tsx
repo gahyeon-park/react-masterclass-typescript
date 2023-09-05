@@ -29,6 +29,7 @@ function App() {
 
     const { destination, draggableId, source } = info;
 
+    if(!destination) return;
     if(destination?.droppableId === source.droppableId) {
       // same board movement
       setTodos(allBoards => {
@@ -40,6 +41,22 @@ function App() {
           ...allBoards, // 기존 todo, doing, done 리스트를 그대로 가져오고
           [source.droppableId]: boardCopied // 드래그앤드롭한 보드 리스트만 업데이트
         };
+      });
+    }
+
+    if(destination.droppableId !== source.droppableId) {
+      // across board movement
+      setTodos(allBoards => {
+        const sourceBoard = [...allBoards[source.droppableId]];
+        const destinationBoard = [...allBoards[destination.droppableId]];
+        sourceBoard.splice(source.index, 1);
+        destinationBoard.splice(destination.index, 0, draggableId);
+
+        return {
+          ...allBoards,
+          [source.droppableId]: sourceBoard,
+          [destination.droppableId]: destinationBoard
+        }
       });
     }
   }
