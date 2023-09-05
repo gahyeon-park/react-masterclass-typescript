@@ -33,13 +33,14 @@ function App() {
     if(destination?.droppableId === source.droppableId) {
       // same board movement
       setTodos(allBoards => {
+        const dragTarget = allBoards[source.droppableId][+draggableId];
         const boardCopied = [...allBoards[source.droppableId]];
         boardCopied.splice(source.index, 1);
-        boardCopied.splice(destination?.index, 0, draggableId);
+        boardCopied.splice(destination?.index, 0, dragTarget);
         
         return {
-          ...allBoards, // 기존 todo, doing, done 리스트를 그대로 가져오고
-          [source.droppableId]: boardCopied // 드래그앤드롭한 보드 리스트만 업데이트
+          ...allBoards,
+          [source.droppableId]: boardCopied
         };
       });
     }
@@ -47,10 +48,11 @@ function App() {
     if(destination.droppableId !== source.droppableId) {
       // across board movement
       setTodos(allBoards => {
+        const dragTarget = allBoards[source.droppableId][+draggableId];
         const sourceBoard = [...allBoards[source.droppableId]];
         const destinationBoard = [...allBoards[destination.droppableId]];
         sourceBoard.splice(source.index, 1);
-        destinationBoard.splice(destination.index, 0, draggableId);
+        destinationBoard.splice(destination.index, 0, dragTarget);
 
         return {
           ...allBoards,
