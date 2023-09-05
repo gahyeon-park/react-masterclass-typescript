@@ -1,12 +1,12 @@
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useRecoilState } from 'recoil';
 import { todoListState } from './atoms';
 import styled from 'styled-components';
-import DraggableCard from './components/DraggableCard';
+import Board from './components/Board';
 
 const Wrapper = styled.div`
   display: flex;
-  max-width: 480px;
+  max-width: 680px;
   width: 100%;
   margin: 0 auto;
   justify-content: center;
@@ -16,51 +16,33 @@ const Wrapper = styled.div`
 
 const Boards = styled.div`
   display: grid;
-  grid-template-colomns: repeat(1, 1fr);
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
   width: 100%;
 `;
 
-const Board = styled.div`
-  min-height: 200px;
-  padding: 20px 10px;
-  padding-top: 30px;
-  border-radius: 5px;
-  background-color: ${props => props.theme.boardColor};
-`;
 
 function App() {
   const [todos, setTodos] = useRecoilState(todoListState);
   const onDragEnd = ({ draggableId, destination, source } : DropResult) => {
     // console.log("dragging finished", args.source.index, args.destination.index);
 
-    if(!destination) return;
-    setTodos(oldTodos => {
-      const todosCopied = [...oldTodos]; // splice는 원본배열을 수정하므로 todos배열 복사본으로 작업한다.
-      // 1. Delete item on source.index
-      todosCopied.splice(source.index, 1);
-      // 2. Put back the item on the destination.index
-      todosCopied.splice(destination?.index, 0, draggableId);
+    // if(!destination) return;
+    // setTodos(oldTodos => {
+    //   const todosCopied = [...oldTodos];
+    //   todosCopied.splice(source.index, 1);
+    //   todosCopied.splice(destination?.index, 0, draggableId);
 
-      return todosCopied;
-    });
+    //   return todosCopied;
+    // });
   }
   console.log(todos);
-  
 
+ 
   return <DragDropContext onDragEnd={onDragEnd}>
     <Wrapper>
       <Boards>
-        <Droppable droppableId="one">
-          {(provided) => 
-            <Board ref={provided.innerRef} {...provided.droppableProps}>
-              {todos.map((todo, idx) => (
-                // ※ react-beautiful-dnd에서 key와 draggableId는 같아야 함.
-                <DraggableCard key={todo} todo={todo} idx={idx} />
-              ))}
-              {provided.placeholder}
-            </Board>
-          }
-        </Droppable>
+        {Object.keys(todos).map(boardId => <Board boardId={boardId} key={boardId} todos={todos[boardId]} />)}
       </Boards>
     </Wrapper>
   </DragDropContext>
