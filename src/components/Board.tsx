@@ -4,7 +4,7 @@ import DraggableCard from './DraggableCard';
 
 const Wrapper = styled.div`
   min-height: 300px;
-  padding: 20px 10px;
+  padding-top: 10px;
   border-radius: 5px;
   background-color: ${props => props.theme.boardColor};
   display: flex;
@@ -25,8 +25,9 @@ interface IAreaProps {
 
 // Area가 div 태그여서 isDraggingOver props를 인지못하기 때문에 ↓아래와 같이 type 선언
 const Area = styled.div<IAreaProps>`
-  background-color: ${props => props.$isDraggingOver ? "pink" : props.$isDraggingFromThis ? "slategray" : "lightseagreen"};
   flex-grow: 1;
+  padding: 20px;
+  background-color: ${props => props.$isDraggingOver ? "#e5e8ee" : props.$isDraggingFromThis ? "#c7cbd4" : "transparent"};
   transition: background-color .3s ease-in-out;
 `;
 
