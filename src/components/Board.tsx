@@ -1,6 +1,7 @@
 import { Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import DraggableCard from './DraggableCard';
+import { useRef } from 'react';
 
 const Wrapper = styled.div`
   min-height: 300px;
@@ -37,9 +38,18 @@ interface IProps {
 }
 
 function Board({ todos, boardId } : IProps){
+  // ※ react의 useRef를 사용해 html태그를 가져와서 해당 DOM의 javascript 메소드를 실행할 수 있다.
+  // ex) video 태그를 참조해온다면(useRef<HTMLVideoElement>(null)), 해당 video 엘리먼트를 play시키거나 pause 시키거나 할 수 있다.
+  const inputRef = useRef<HTMLInputElement>(null);
+  const onClick = () => {
+    inputRef.current?.focus();
+  }
+
   return (
     <Wrapper>
       <Title>{boardId}</Title>
+      <input type="text" ref={inputRef} placeholder="" />
+      <button onClick={onClick}>Click me</button>
       <Droppable droppableId={boardId}>
         {(provided, snapshot) => (
           <Area $isDraggingOver={snapshot.isDraggingOver} $isDraggingFromThis={Boolean(snapshot.draggingFromThisWith)} ref={provided.innerRef} {...provided.droppableProps}>
