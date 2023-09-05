@@ -2,7 +2,8 @@ import { Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import DraggableCard from './DraggableCard';
 import { useForm } from 'react-hook-form';
-import { ITodo } from '../atoms';
+import { useSetRecoilState } from 'recoil';
+import { ITodo, todoListState } from '../atoms';
 
 const Wrapper = styled.div`
   min-height: 300px;
@@ -52,22 +53,31 @@ interface IForm {
 
 function Board({ todos, boardId } : IProps){
   const { register, setValue, handleSubmit } = useForm<IForm>();
+  const setTodos = useSetRecoilState(todoListState);
 
-  const onValid = (data: IForm) => {
-    console.log(data);
+  const onValid = ({ todo }: IForm) => {
+    const newTodo = {
+      id: Date.now(),
+      text: todo
+    };
+
+    setTodos(allBoards => {
+      return {
+        ...allBoards,
+        [boardId]: [...allBoards[boardId], newTodo]
+      }
+    });
+
     setValue("todo", "");
   }
 
-  const onInvalid = () => {
-
-  }
+  const onInvalid = () => {}
 
   return (
     <Wrapper>
       <Title>{boardId}</Title>
       <Form onSubmit={handleSubmit(onValid, onInvalid)}>
         <input type="text" {...register("todo", {required: true})} placeholder={`add task ${boardId}`} />
-        <button></button>
       </Form>
       <Droppable droppableId={boardId}>
         {(provided, snapshot) => (

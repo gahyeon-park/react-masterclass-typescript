@@ -27,14 +27,14 @@ function App() {
   const onDragEnd = (info : DropResult) => {
     console.log("dragging finished", info);
 
-    const { destination, draggableId, source } = info;
+    const { destination, source } = info;
 
     if(!destination) return;
     if(destination?.droppableId === source.droppableId) {
       // same board movement
       setTodos(allBoards => {
-        const dragTarget = allBoards[source.droppableId][+draggableId];
         const boardCopied = [...allBoards[source.droppableId]];
+        const dragTarget = boardCopied[source.index];
         boardCopied.splice(source.index, 1);
         boardCopied.splice(destination?.index, 0, dragTarget);
         
@@ -48,8 +48,8 @@ function App() {
     if(destination.droppableId !== source.droppableId) {
       // across board movement
       setTodos(allBoards => {
-        const dragTarget = allBoards[source.droppableId][+draggableId];
         const sourceBoard = [...allBoards[source.droppableId]];
+        const dragTarget = sourceBoard[source.index];
         const destinationBoard = [...allBoards[destination.droppableId]];
         sourceBoard.splice(source.index, 1);
         destinationBoard.splice(destination.index, 0, dragTarget);

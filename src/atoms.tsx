@@ -14,8 +14,8 @@ interface ITodoListState {
 export const todoListState = atom<ITodoListState>({
   key: "toDo",
   default: {
-    "to do": [{ id: 0, text: "출근"}],
-    doing: [{ id: 1, text: "근무"}],
-    done: [{id: 2, text: "기상"}]
+    "to do": [],
+    doing: [],
+    done: []
   }
 });
