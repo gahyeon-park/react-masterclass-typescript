@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { useRef } from 'react';
+import { motion, useMotionValue } from 'framer-motion';
+import { useEffect } from 'react';
 
 const Wrapper = styled.div`
   display: flex;
@@ -8,16 +8,6 @@ const Wrapper = styled.div`
   height: 100vh;  
   justify-content: center;
   align-items: center;
-`;
-
-const BiggerBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 600px;
-  height: 600px;
-  background-color: rgba(255, 255, 255, .3);
-  border-radius: 40px;
 `;
 
 const Box = styled(motion.div)`
@@ -30,30 +20,18 @@ const Box = styled(motion.div)`
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
 
-const boxVariants = {
-  hover: { rotateZ: 90 },
-  click: { borderRadius: "100px" },
-  drag: { }
-}
-
 function App() {
-  const biggerBoxRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0); // useMotionValue(): 애니메이션의 특정 값을 계속 추적할 수 있게 해준다.
 
-  return (
+  console.log(x);
+  useEffect(() => {
+    x.onChange(() => console.log(x.get()))
+  }, [x]);
+
+   return (
     <Wrapper>
-      <BiggerBox ref={biggerBoxRef}>
-        <Box 
-          drag 
-          dragConstraints={biggerBoxRef}
-          // dragConstraints={{ top: -200, right: 200, bottom: 200, left: -200 }} 
-          dragSnapToOrigin
-          dragElastic={.5}
-          variants={boxVariants} 
-          whileDrag="drag" 
-          whileHover="hover" 
-          whileTap="click" 
-        />
-      </BiggerBox>
+      <button onClick={() => x.set(200)}>Click me</button>
+      <Box style={{ x: x }} drag="x" dragSnapToOrigin />
     </Wrapper>
   )
 }
