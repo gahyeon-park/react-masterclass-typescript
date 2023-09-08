@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { motion, useMotionValue } from 'framer-motion';
-import { useEffect } from 'react';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
 const Wrapper = styled.div`
   display: flex;
@@ -22,16 +22,11 @@ const Box = styled(motion.div)`
 
 function App() {
   const x = useMotionValue(0); // useMotionValue(): 애니메이션의 특정 값을 계속 추적할 수 있게 해준다.
+  const scaleValue = useTransform(x, [-800, 0, 800], [2, 1, 0]);
 
-  console.log(x);
-  useEffect(() => {
-    x.onChange(() => console.log(x.get()))
-  }, [x]);
-
-   return (
+  return (
     <Wrapper>
-      <button onClick={() => x.set(200)}>Click me</button>
-      <Box style={{ x: x }} drag="x" dragSnapToOrigin />
+      <Box style={{ x: x, scale: scaleValue }} drag="x" dragSnapToOrigin />
     </Wrapper>
   )
 }
