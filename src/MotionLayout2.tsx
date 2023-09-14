@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { ReactText, useState } from "react";
 
 const Wrapper = styled(motion.div)`
   display: flex;
@@ -40,25 +40,24 @@ const Overlay = styled(motion.div)`
 `;
 
 function App() {
-  const [clicked, setClicked] = useState(false);
-  const toggleClick = () => setClicked((prev) => !prev);
+  const [id, setId] = useState<null | string>(null);
   return (
-    <Wrapper onClick={toggleClick}>
+    <Wrapper>
       <Grid>
-        <Box layoutId="first" />
-        <Box />
-        <Box />
-        <Box />
+        {[1, 2, 3, 4].map((n) => (
+          <Box key={n} layoutId={`${n}`} onClick={() => setId(`${n}`)} />
+        ))}
       </Grid>
 
-      <AnimatePresence>
-        {clicked ? (
+      <AnimatePresence custom={id}>
+        {id ? (
           <Overlay
+            onClick={() => setId(null)}
             initial={{ backgroundColor: "rgba(0,0,0, 0)" }}
             animate={{ backgroundColor: "rgba(0,0,0, 0.5)" }}
             exit={{ backgroundColor: "rgba(0,0,0, 0)" }}
           >
-            <Box layoutId="first" style={{ width: 400, height: 200 }} />
+            <Box layoutId={`${id}`} style={{ width: 400, height: 200 }} />
           </Overlay>
         ) : null}
       </AnimatePresence>
