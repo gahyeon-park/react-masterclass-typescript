@@ -1,9 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { RecoilRoot } from 'recoil';
-import App from './App';
-import { ThemeProvider, createGlobalStyle } from 'styled-components';
-import { darkTheme } from './theme';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { RecoilRoot } from "recoil";
+import App from "./MotionLayout";
+import { ThemeProvider, createGlobalStyle } from "styled-components";
+import { darkTheme } from "./theme";
 
 const GlobalStyle = createGlobalStyle`
 html, body, div, span, applet, object, iframe,
@@ -26,7 +26,6 @@ time, mark, audio, video {
   font: inherit;
   vertical-align: baseline;
 }
-@@ -49,34 +50,33 @@
 q:before, q:after {
   content: '';
   content: none;
@@ -49,8 +48,8 @@ a {
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
-  );
-  
+);
+
 root.render(
   <div>
     <RecoilRoot>
